@@ -9,7 +9,7 @@
   --cream-muted: rgba(247, 240, 230, 0.72);
   --line: rgba(230, 201, 138, 0.28);
   --font-display: "Bebas Neue", "Arial Narrow", sans-serif;
-  --font-body: "Outfit", "Helvetica Neue", sans-serif;
+  --font-body: "Zen Kaku Gothic New", "Outfit", "Helvetica Neue", sans-serif;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --header-h: 4.5rem;
 }
@@ -121,11 +121,8 @@ button {
   position: absolute;
   inset: -4%;
   background:
-    radial-gradient(ellipse 55% 45% at 70% 35%, rgba(180, 35, 24, 0.45), transparent 55%),
-    radial-gradient(ellipse 40% 50% at 30% 70%, rgba(230, 201, 138, 0.12), transparent 50%),
-    linear-gradient(160deg, #1a0f0c 0%, #3d1510 38%, #140c0a 100%),
-    url("https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80")
-      center 40% / cover no-repeat;
+    radial-gradient(ellipse 50% 40% at 72% 30%, rgba(180, 35, 24, 0.35), transparent 60%),
+    url("assets/hero-stage.jpg") center 35% / cover no-repeat;
   animation: hero-drift 22s var(--ease-out) infinite alternate;
   will-change: transform;
 }
@@ -134,8 +131,8 @@ button {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(20, 12, 10, 0.88) 0%, rgba(20, 12, 10, 0.55) 48%, rgba(20, 12, 10, 0.35) 100%),
-    linear-gradient(180deg, rgba(20, 12, 10, 0.35) 0%, rgba(20, 12, 10, 0.15) 40%, rgba(20, 12, 10, 0.92) 100%);
+    linear-gradient(105deg, rgba(20, 12, 10, 0.82) 0%, rgba(20, 12, 10, 0.42) 42%, rgba(20, 12, 10, 0.18) 68%, rgba(20, 12, 10, 0.45) 100%),
+    linear-gradient(180deg, rgba(20, 12, 10, 0.28) 0%, rgba(20, 12, 10, 0.08) 38%, rgba(20, 12, 10, 0.88) 100%);
 }
 
 .hero-grain {
