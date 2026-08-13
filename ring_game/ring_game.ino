@@ -30,13 +30,15 @@ const int MIN_INTERVAL = 20;
 const int MAX_WINS = 3;
 const int MAX_MISSES = 3;
 
+// 終了演出のあと、自動再開するまでの待ち時間
+const int RESTART_PAUSE = 2500;
+
 int currentLed = 1;
 int visibleLed = 1;
 
 int misses = 0;
 int wins = 0;
 
-bool gameOver = false;
 bool lastButtonState = HIGH;
 
 unsigned long previousMillis = 0;
@@ -102,15 +104,8 @@ void loop() {
   if (lastButtonState == HIGH &&
       buttonState == LOW) {
 
-    // ゲームオーバーなら再スタート
-    if (gameOver) {
-
-      resetGame();
-
-    }
-
     // 当たり！
-    else if (visibleLed == TARGET_LED) {
+    if (visibleLed == TARGET_LED) {
 
       win();
 
@@ -133,12 +128,6 @@ void loop() {
   }
 
   lastButtonState = buttonState;
-
-
-  // ゲームオーバーなら停止
-  if (gameOver) {
-    return;
-  }
 
 
   // ==========================
@@ -332,8 +321,6 @@ void missEffect() {
 
 void lose() {
 
-  gameOver = true;
-
   ring.clear();
 
   for (int i = 0; i < LED_COUNT; i++) {
@@ -358,6 +345,9 @@ void lose() {
   delay(500);
 
   noTone(BUZZER_PIN);
+
+  delay(RESTART_PAUSE);
+  resetGame();
 }
 
 
@@ -384,8 +374,6 @@ uint32_t colorWheel(byte pos) {
 
 
 void rainbowFinale() {
-
-  gameOver = true;
 
   // レインボー成功音
   tone(BUZZER_PIN, 1200);
@@ -427,6 +415,9 @@ void rainbowFinale() {
   }
 
   ring.show();
+
+  delay(RESTART_PAUSE);
+  resetGame();
 }
 
 
@@ -438,8 +429,6 @@ void resetGame() {
 
   misses = 0;
   wins = 0;
-
-  gameOver = false;
 
   // 速度も最初に戻す
   interval = 80;
