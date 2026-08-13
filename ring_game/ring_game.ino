@@ -26,13 +26,13 @@ const int SPEED_UP = 15;
 // 最速は20ms
 const int MIN_INTERVAL = 20;
 
-// 成功・失敗を問わずこの回数で終了
-const int MAX_ATTEMPTS = 3;
+// 成功3回でレインボー、連続失敗3回でゲームオーバー
+const int MAX_WINS = 3;
+const int MAX_MISSES = 3;
 
 int currentLed = 1;
 int visibleLed = 1;
 
-int attempts = 0;
 int misses = 0;
 int wins = 0;
 
@@ -119,8 +119,14 @@ void loop() {
     // ハズレ
     else {
 
-      miss();
+      misses++;
 
+      if (misses >= MAX_MISSES) {
+        lose();
+      }
+      else {
+        missEffect();
+      }
     }
 
     delay(30);
@@ -204,7 +210,9 @@ void playStartMelody() {
 void win() {
 
   wins++;
-  attempts++;
+
+  // 成功したら、それまでの失敗記録は捨てる
+  misses = 0;
 
   // 成功音
   tone(BUZZER_PIN, 1000);
@@ -254,16 +262,9 @@ void win() {
   delay(500);
 
 
-  // 3回目なら終了演出へ
-  if (attempts >= MAX_ATTEMPTS) {
-
-    if (wins >= MAX_ATTEMPTS) {
-      rainbowFinale();
-    }
-    else {
-      lose();
-    }
-
+  // 成功3回でレインボーフィナーレ
+  if (wins >= MAX_WINS) {
+    rainbowFinale();
     return;
   }
 
@@ -294,20 +295,6 @@ void win() {
 // ==========================
 // ❌ ハズレ
 // ==========================
-
-void miss() {
-
-  misses++;
-  attempts++;
-
-  if (attempts >= MAX_ATTEMPTS) {
-    lose();
-    return;
-  }
-
-  missEffect();
-}
-
 
 void missEffect() {
 
@@ -340,7 +327,7 @@ void missEffect() {
 
 
 // ==========================
-// 💀 3回終了（成功3以外）
+// 💀 連続失敗3回
 // ==========================
 
 void lose() {
@@ -449,7 +436,6 @@ void rainbowFinale() {
 
 void resetGame() {
 
-  attempts = 0;
   misses = 0;
   wins = 0;
 
