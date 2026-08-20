@@ -15,7 +15,7 @@ Adafruit_NeoPixel ring(
 // ゲーム設定
 // ==========================
 
-const int TARGET_LED = 0;
+int targetLed = -1;
 
 // 最初の速度
 unsigned long interval = 80;
@@ -84,8 +84,13 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(BUZZER_PIN, OUTPUT);
 
+  randomSeed(analogRead(A0));
+
   // 🎵 起動時に開始メロディー
   playStartMelody();
+
+  pickNewTarget();
+  resetSpinner();
 
   previousMillis = millis();
 }
@@ -121,7 +126,7 @@ void loop() {
     presses++;
 
     // 当たり！
-    if (visibleLed == TARGET_LED) {
+    if (visibleLed == targetLed) {
 
       win();
 
@@ -165,7 +170,7 @@ void loop() {
 
     // 当たりを緑
     ring.setPixelColor(
-      TARGET_LED,
+      targetLed,
       ring.Color(0, 80, 0)
     );
 
@@ -299,8 +304,8 @@ void win() {
     }
   }
 
-  currentLed = 1;
-  visibleLed = 1;
+  pickNewTarget();
+  resetSpinner();
 
   ring.clear();
   ring.show();
@@ -338,6 +343,9 @@ void missEffect() {
   ring.show();
 
   delay(100);
+
+  pickNewTarget();
+  resetSpinner();
 
   previousMillis = millis();
 }
@@ -499,8 +507,8 @@ void startGame() {
   // 速度も最初に戻す
   interval = 80;
 
-  currentLed = 1;
-  visibleLed = 1;
+  pickNewTarget();
+  resetSpinner();
 
   ring.setBrightness(60);
   ring.clear();
@@ -512,4 +520,32 @@ void startGame() {
 
 
   previousMillis = millis();
+}
+
+
+// ==========================
+// 🎯 緑の当たり位置
+// ==========================
+
+void pickNewTarget() {
+
+  if (LED_COUNT <= 1) {
+    targetLed = 0;
+    return;
+  }
+
+  int next = targetLed;
+
+  while (next == targetLed) {
+    next = random(LED_COUNT);
+  }
+
+  targetLed = next;
+}
+
+
+void resetSpinner() {
+
+  currentLed = (targetLed + 1) % LED_COUNT;
+  visibleLed = currentLed;
 }
