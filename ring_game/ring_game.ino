@@ -26,7 +26,7 @@ const int SPEED_UP = 15;
 // 最速は20ms
 const int MIN_INTERVAL = 20;
 
-// 成功3回でレインボー、連続失敗3回でゲームオーバー
+// 成功3回でも失敗3回でも終了
 const int MAX_WINS = 3;
 const int MAX_MISSES = 3;
 
