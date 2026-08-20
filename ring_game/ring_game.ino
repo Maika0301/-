@@ -33,7 +33,7 @@ const int MAX_MISSES = 3;
 // 終了演出のあと、自動再開するまでの待ち時間
 const int RESTART_PAUSE = 2500;
 
-// 3ゲーム遊んだら休止
+// 3ゲーム遊んだら完全終了
 const int MAX_GAMES = 3;
 
 int currentLed = 1;
