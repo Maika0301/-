@@ -1,0 +1,11 @@
+{
+  "name": "Michael Jackson Fan Page",
+  "ports": [{ "name": "web", "port": 8080 }],
+  "terminals": [
+    {
+      "name": "web",
+      "command": "python3 -m http.server 8080",
+      "description": "Static dev server for the fan page (open http://localhost:8080)."
+    }
+  ]
+}
