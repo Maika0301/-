@@ -341,7 +341,7 @@ void missEffect() {
 
 
 // ==========================
-// 💀 連続失敗3回
+// 💀 連続失敗3回で終了
 // ==========================
 
 void lose() {
@@ -372,7 +372,7 @@ void lose() {
   noTone(BUZZER_PIN);
 
   ledsOff();
-  endRound();
+  enterStop();
 }
 
 
