@@ -15,9 +15,15 @@ python3 -m http.server 8080
 ## 構成
 
 - `index.html` — ページ構造
-- `styles.css` — ビジュアル（ステージライト × クリムゾン）
-- `script.js` — スクロール演出・統計カウント・瞬間カルーセル
+- `styles.css` — ビジュアル（クリムゾン × シャンパン）
+- `script.js` — スクロール演出・統計カウント・Hee hee 再生
+- `assets/images/` — Wikimedia Commons 由来の MJ 写真
+- `assets/audio/hee-hee.mp3` — Hee hee サウンドクリップ
+
+## Hee hee
+
+ヘッダーの **Hee hee** ボタンでサウンドをオンにすると、セクションがフェードインするたびにクリップが再生され、同時に音量がフェードアウトします。
 
 ## 注意
 
-公式・Estate 非公認のファントリビュートページです。
+公式・Estate 非公認のファントリビュートページです。写真は Wikimedia Commons（PD / CC）を利用しています。

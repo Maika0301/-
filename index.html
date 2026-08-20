@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -19,11 +19,17 @@
   <body>
     <header class="site-header" data-header>
       <a class="logo" href="#top">MJ</a>
-      <nav class="nav" aria-label="メインメニュー">
-        <a href="#legacy">遺産</a>
-        <a href="#music">音楽</a>
-        <a href="#moments">瞬間</a>
-      </nav>
+      <div class="header-tools">
+        <nav class="nav" aria-label="メインメニュー">
+          <a href="#legacy">遺産</a>
+          <a href="#music">音楽</a>
+          <a href="#portraits">写真</a>
+          <a href="#moments">瞬間</a>
+        </nav>
+        <button type="button" class="sound-toggle" data-sound-toggle aria-pressed="false" aria-label="Hee hee サウンドをオン">
+          Hee hee
+        </button>
+      </div>
     </header>
 
     <main id="top">
@@ -122,6 +128,68 @@
         </div>
       </section>
 
+      <section class="section portraits" id="portraits">
+        <div class="section-inner">
+          <p class="section-label">Portraits</p>
+          <h2 class="section-title">時代を映した顔</h2>
+          <p class="section-copy">
+            Wikimedia Commons より。公的アーカイブと許諾付き写真でたどる、キング・オブ・ポップの貌。
+          </p>
+        </div>
+        <div class="portrait-rail" aria-label="Michael Jackson の写真">
+          <figure class="portrait reveal">
+            <img
+              src="assets/images/mj-1974-web.jpg"
+              alt="1974年のマイケル・ジャクソン"
+              width="638"
+              height="872"
+              loading="lazy"
+            />
+            <figcaption>1974 · Larry Bessel / Los Angeles Times · CC BY 4.0</figcaption>
+          </figure>
+          <figure class="portrait reveal">
+            <img
+              src="assets/images/mj-1983-web.jpg"
+              alt="1983年のマイケル・ジャクソン"
+              width="1591"
+              height="1600"
+              loading="lazy"
+            />
+            <figcaption>1983 · Epic Records publicity still（米国パブリックドメイン扱い）</figcaption>
+          </figure>
+          <figure class="portrait reveal">
+            <img
+              src="assets/images/mj-1984-web.jpg"
+              alt="1984年、ホワイトハウスでのマイケル・ジャクソン"
+              width="760"
+              height="1158"
+              loading="lazy"
+            />
+            <figcaption>1984 · White House Photo Office · パブリックドメイン</figcaption>
+          </figure>
+          <figure class="portrait reveal">
+            <img
+              src="assets/images/mj-1988-web.jpg"
+              alt="1988年のマイケル・ジャクソン"
+              width="393"
+              height="600"
+              loading="lazy"
+            />
+            <figcaption>1988 · Zoran Veselinovic · CC BY-SA 2.0</figcaption>
+          </figure>
+          <figure class="portrait reveal">
+            <img
+              src="assets/images/mj-reagans-web.jpg"
+              alt="レーガン大統領夫妻とマイケル・ジャクソン"
+              width="1395"
+              height="1400"
+              loading="lazy"
+            />
+            <figcaption>1984 · White House · パブリックドメイン</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section class="section moments" id="moments">
         <div class="section-inner">
           <p class="section-label">Iconic Moments</p>
@@ -183,9 +251,11 @@
 
     <footer class="site-footer">
       <p>Fan tribute page · Not affiliated with the Estate of Michael Jackson</p>
+      <p>写真は Wikimedia Commons。Hee hee はファン向けサウンドクリップです。</p>
       <p>© <span id="year"></span> Michael Jackson Fan Page</p>
     </footer>
 
+    <audio id="hee-hee" src="assets/audio/hee-hee.mp3" preload="auto"></audio>
     <script src="script.js"></script>
   </body>
 </html>
