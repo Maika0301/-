@@ -33,12 +33,17 @@ const int MAX_MISSES = 3;
 // 終了演出のあと、自動再開するまでの待ち時間
 const int RESTART_PAUSE = 2500;
 
+// 3ゲーム遊んだら休止
+const int MAX_GAMES = 3;
+
 int currentLed = 1;
 int visibleLed = 1;
 
 int misses = 0;
 int wins = 0;
+int gamesPlayed = 0;
 
+bool resting = false;
 bool lastButtonState = HIGH;
 
 unsigned long previousMillis = 0;
@@ -99,6 +104,21 @@ void setup() {
 void loop() {
 
   bool buttonState = digitalRead(BUTTON_PIN);
+
+  // 休止中はLEDを消したまま、ボタンで再開
+  if (resting) {
+
+    if (lastButtonState == HIGH &&
+        buttonState == LOW) {
+
+      resting = false;
+      resetGame();
+      delay(30);
+    }
+
+    lastButtonState = buttonState;
+    return;
+  }
 
   // ボタンを押した瞬間
   if (lastButtonState == HIGH &&
@@ -346,8 +366,7 @@ void lose() {
 
   noTone(BUZZER_PIN);
 
-  delay(RESTART_PAUSE);
-  resetGame();
+  endRound();
 }
 
 
@@ -416,8 +435,46 @@ void rainbowFinale() {
 
   ring.show();
 
+  endRound();
+}
+
+
+// ==========================
+// 1ゲーム終了
+// ==========================
+
+void endRound() {
+
+  gamesPlayed++;
+
   delay(RESTART_PAUSE);
+
+  // 3ゲーム遊んだら休止（LED消灯、ボタン待ち）
+  if (gamesPlayed >= MAX_GAMES) {
+    enterRest();
+    return;
+  }
+
   resetGame();
+}
+
+
+// ==========================
+// 😴 休止
+// ==========================
+
+void enterRest() {
+
+  resting = true;
+  gamesPlayed = 0;
+  misses = 0;
+  wins = 0;
+  interval = 80;
+
+  noTone(BUZZER_PIN);
+
+  ring.clear();
+  ring.show();
 }
 
 
