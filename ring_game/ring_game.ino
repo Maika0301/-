@@ -1,5 +1,9 @@
 #include <Adafruit_NeoPixel.h>
 
+#if defined(ARDUINO_ARCH_AVR)
+#include <avr/wdt.h>
+#endif
+
 #define LED_PIN     6
 #define BUTTON_PIN  2
 #define BUZZER_PIN  3
@@ -80,6 +84,11 @@ const int startDuration[] = {
 // ==========================
 
 void setup() {
+
+#if defined(ARDUINO_ARCH_AVR)
+  MCUSR = 0;
+  wdt_disable();
+#endif
 
   ring.begin();
   ring.setBrightness(60);
@@ -454,10 +463,34 @@ void enterRest() {
   ring.clear();
   ring.show();
 
-  // スリープ：消灯したまま停止。電源を入れ直すまで再開しない
+  // スリープ（消灯）のあと、ゲーム再開ではなく基板を再起動する
+  delay(1500);
+  reboot();
+}
+
+
+// ==========================
+// 🔌 再起動（setup からやり直し）
+// ==========================
+
+void reboot() {
+
+  noTone(BUZZER_PIN);
+
+  ring.setBrightness(0);
+  ring.clear();
+  ring.show();
+
+#if defined(ARDUINO_ARCH_AVR)
+  wdt_enable(WDTO_15MS);
   while (true) {
-    delay(1000);
   }
+#elif defined(ESP32) || defined(ESP8266)
+  ESP.restart();
+#else
+  void (*resetFunc)(void) = 0;
+  resetFunc();
+#endif
 }
 
 
