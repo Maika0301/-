@@ -1,9 +1,5 @@
 #include <Adafruit_NeoPixel.h>
 
-#if defined(ARDUINO_ARCH_AVR)
-#include <avr/wdt.h>
-#endif
-
 #define LED_PIN     6
 #define BUTTON_PIN  2
 #define BUZZER_PIN  3
@@ -47,6 +43,7 @@ int misses = 0;
 int wins = 0;
 int gamesPlayed = 0;
 
+bool stopped = false;
 bool lastButtonState = HIGH;
 
 unsigned long previousMillis = 0;
@@ -85,11 +82,6 @@ const int startDuration[] = {
 
 void setup() {
 
-#if defined(ARDUINO_ARCH_AVR)
-  MCUSR = 0;
-  wdt_disable();
-#endif
-
   ring.begin();
   ring.setBrightness(60);
   ring.clear();
@@ -112,6 +104,21 @@ void setup() {
 void loop() {
 
   bool buttonState = digitalRead(BUTTON_PIN);
+
+  // 完全終了中は消灯のまま。次のボタンで起動
+  if (stopped) {
+
+    if (lastButtonState == HIGH &&
+        buttonState == LOW) {
+
+      stopped = false;
+      startGame();
+      delay(30);
+    }
+
+    lastButtonState = buttonState;
+    return;
+  }
 
   // ボタンを押した瞬間
   if (lastButtonState == HIGH &&
@@ -141,6 +148,11 @@ void loop() {
   }
 
   lastButtonState = buttonState;
+
+  // このフレームで終了したら、LEDは回さない
+  if (stopped) {
+    return;
+  }
 
 
   // ==========================
@@ -440,9 +452,9 @@ void endRound() {
 
   gamesPlayed++;
 
-  // 3ゲーム遊んだら結果を消して休止（LEDは光らせない）
+  // 3ゲーム遊んだら完全終了（消灯、ボタン待ち）
   if (gamesPlayed >= MAX_GAMES) {
-    enterRest();
+    enterStop();
     return;
   }
 
@@ -452,50 +464,57 @@ void endRound() {
 
 
 // ==========================
-// 😴 休止
+// ⏹ 完全終了
 // ==========================
 
-void enterRest() {
+void enterStop() {
+
+  stopped = true;
+  gamesPlayed = 0;
+  misses = 0;
+  wins = 0;
+  interval = 80;
 
   noTone(BUZZER_PIN);
 
   ring.setBrightness(0);
   ring.clear();
   ring.show();
-
-  // スリープ（消灯）のあと、ゲーム再開ではなく基板を再起動する
-  delay(1500);
-  reboot();
 }
 
 
 // ==========================
-// 🔌 再起動（setup からやり直し）
+// ▶️ 起動
 // ==========================
 
-void reboot() {
+void startGame() {
 
-  noTone(BUZZER_PIN);
+  stopped = false;
+  gamesPlayed = 0;
+  misses = 0;
+  wins = 0;
 
-  ring.setBrightness(0);
+  // 速度も最初に戻す
+  interval = 80;
+
+  currentLed = 1;
+  visibleLed = 1;
+
+  ring.setBrightness(60);
   ring.clear();
   ring.show();
 
-#if defined(ARDUINO_ARCH_AVR)
-  wdt_enable(WDTO_15MS);
-  while (true) {
-  }
-#elif defined(ESP32) || defined(ESP8266)
-  ESP.restart();
-#else
-  void (*resetFunc)(void) = 0;
-  resetFunc();
-#endif
+
+  // 🎵 起動メロディー
+  playStartMelody();
+
+
+  previousMillis = millis();
 }
 
 
 // ==========================
-// 🔄 最初から
+// 🔄 次のゲーム
 // ==========================
 
 void resetGame() {
