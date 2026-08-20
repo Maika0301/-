@@ -441,6 +441,7 @@ void rainbowFinale() {
 
   ring.show();
 
+  delay(800);
   ledsOff();
   endRound();
 }
