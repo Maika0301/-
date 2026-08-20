@@ -30,18 +30,11 @@ const int MIN_INTERVAL = 20;
 const int MAX_WINS = 3;
 const int MAX_MISSES = 3;
 
-// 終了演出のあと、自動再開するまでの待ち時間
-const int RESTART_PAUSE = 2500;
-
-// 3ゲーム遊んだら完全終了
-const int MAX_GAMES = 3;
-
 int currentLed = 1;
 int visibleLed = 1;
 
 int misses = 0;
 int wins = 0;
-int gamesPlayed = 0;
 
 bool stopped = false;
 bool lastButtonState = HIGH;
@@ -443,26 +436,7 @@ void rainbowFinale() {
 
   delay(800);
   ledsOff();
-  endRound();
-}
-
-
-// ==========================
-// 1ゲーム終了
-// ==========================
-
-void endRound() {
-
-  gamesPlayed++;
-
-  // 3ゲーム遊んだら完全終了（消灯、ボタン待ち）
-  if (gamesPlayed >= MAX_GAMES) {
-    enterStop();
-    return;
-  }
-
-  delay(RESTART_PAUSE);
-  resetGame();
+  enterStop();
 }
 
 
@@ -492,7 +466,6 @@ void ledsOff() {
 void enterStop() {
 
   stopped = true;
-  gamesPlayed = 0;
   misses = 0;
   wins = 0;
   interval = 80;
@@ -508,7 +481,6 @@ void enterStop() {
 void startGame() {
 
   stopped = false;
-  gamesPlayed = 0;
   misses = 0;
   wins = 0;
 
@@ -524,34 +496,6 @@ void startGame() {
 
 
   // 🎵 起動メロディー
-  playStartMelody();
-
-
-  previousMillis = millis();
-}
-
-
-// ==========================
-// 🔄 次のゲーム
-// ==========================
-
-void resetGame() {
-
-  misses = 0;
-  wins = 0;
-
-  // 速度も最初に戻す
-  interval = 80;
-
-  currentLed = 1;
-  visibleLed = 1;
-
-  ring.setBrightness(60);
-  ring.clear();
-  ring.show();
-
-
-  // 🎵 MIDIから変換した開始メロディー
   playStartMelody();
 
 
