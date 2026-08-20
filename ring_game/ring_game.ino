@@ -26,13 +26,14 @@ const int SPEED_UP = 15;
 // 最速は20ms
 const int MIN_INTERVAL = 20;
 
-// 成功3回でも失敗3回でも終了
+// ボタン3回で終了。3回成功ならレインボー
+const int MAX_PRESSES = 3;
 const int MAX_WINS = 3;
-const int MAX_MISSES = 3;
 
 int currentLed = 1;
 int visibleLed = 1;
 
+int presses = 0;
 int misses = 0;
 int wins = 0;
 
@@ -117,6 +118,8 @@ void loop() {
   if (lastButtonState == HIGH &&
       buttonState == LOW) {
 
+    presses++;
+
     // 当たり！
     if (visibleLed == TARGET_LED) {
 
@@ -129,7 +132,7 @@ void loop() {
 
       misses++;
 
-      if (misses >= MAX_MISSES) {
+      if (presses >= MAX_PRESSES) {
         lose();
       }
       else {
@@ -272,6 +275,13 @@ void win() {
   // 成功3回でレインボーフィナーレ
   if (wins >= MAX_WINS) {
     rainbowFinale();
+    return;
+  }
+
+  // ボタン3回で終了
+  if (presses >= MAX_PRESSES) {
+    ledsOff();
+    enterStop();
     return;
   }
 
@@ -466,6 +476,7 @@ void ledsOff() {
 void enterStop() {
 
   stopped = true;
+  presses = 0;
   misses = 0;
   wins = 0;
   interval = 80;
@@ -481,6 +492,7 @@ void enterStop() {
 void startGame() {
 
   stopped = false;
+  presses = 0;
   misses = 0;
   wins = 0;
 
