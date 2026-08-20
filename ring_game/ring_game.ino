@@ -105,7 +105,7 @@ void loop() {
 
   bool buttonState = digitalRead(BUTTON_PIN);
 
-  // 休止中はLEDを消したまま、ボタンで再開
+  // 休止中はLEDを消灯したまま、ボタンで再開
   if (resting) {
 
     if (lastButtonState == HIGH &&
@@ -148,6 +148,11 @@ void loop() {
   }
 
   lastButtonState = buttonState;
+
+  // 3ゲーム後の休止に入ったら、LEDは消灯のまま
+  if (resting) {
+    return;
+  }
 
 
   // ==========================
@@ -447,14 +452,13 @@ void endRound() {
 
   gamesPlayed++;
 
-  delay(RESTART_PAUSE);
-
-  // 3ゲーム遊んだら休止（LED消灯、ボタン待ち）
+  // 3ゲーム遊んだら結果を消して休止（LEDは光らせない）
   if (gamesPlayed >= MAX_GAMES) {
     enterRest();
     return;
   }
 
+  delay(RESTART_PAUSE);
   resetGame();
 }
 
@@ -473,6 +477,7 @@ void enterRest() {
 
   noTone(BUZZER_PIN);
 
+  ring.setBrightness(0);
   ring.clear();
   ring.show();
 }
@@ -493,6 +498,7 @@ void resetGame() {
   currentLed = 1;
   visibleLed = 1;
 
+  ring.setBrightness(60);
   ring.clear();
   ring.show();
 
