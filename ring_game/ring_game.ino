@@ -43,7 +43,6 @@ int misses = 0;
 int wins = 0;
 int gamesPlayed = 0;
 
-bool resting = false;
 bool lastButtonState = HIGH;
 
 unsigned long previousMillis = 0;
@@ -105,21 +104,6 @@ void loop() {
 
   bool buttonState = digitalRead(BUTTON_PIN);
 
-  // 休止中はLEDを消灯したまま、ボタンで再開
-  if (resting) {
-
-    if (lastButtonState == HIGH &&
-        buttonState == LOW) {
-
-      resting = false;
-      resetGame();
-      delay(30);
-    }
-
-    lastButtonState = buttonState;
-    return;
-  }
-
   // ボタンを押した瞬間
   if (lastButtonState == HIGH &&
       buttonState == LOW) {
@@ -148,11 +132,6 @@ void loop() {
   }
 
   lastButtonState = buttonState;
-
-  // 3ゲーム後の休止に入ったら、LEDは消灯のまま
-  if (resting) {
-    return;
-  }
 
 
   // ==========================
@@ -469,17 +448,16 @@ void endRound() {
 
 void enterRest() {
 
-  resting = true;
-  gamesPlayed = 0;
-  misses = 0;
-  wins = 0;
-  interval = 80;
-
   noTone(BUZZER_PIN);
 
   ring.setBrightness(0);
   ring.clear();
   ring.show();
+
+  // スリープ：消灯したまま停止。電源を入れ直すまで再開しない
+  while (true) {
+    delay(1000);
+  }
 }
 
 
