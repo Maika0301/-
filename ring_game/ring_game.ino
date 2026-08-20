@@ -149,7 +149,7 @@ void loop() {
 
   lastButtonState = buttonState;
 
-  // このフレームで終了したら、LEDは回さない
+  // 終了中はLEDを回さない
   if (stopped) {
     return;
   }
@@ -371,6 +371,7 @@ void lose() {
 
   noTone(BUZZER_PIN);
 
+  ledsOff();
   endRound();
 }
 
@@ -440,6 +441,7 @@ void rainbowFinale() {
 
   ring.show();
 
+  ledsOff();
   endRound();
 }
 
@@ -464,6 +466,25 @@ void endRound() {
 
 
 // ==========================
+// 💡 LED消灯
+// ==========================
+
+void ledsOff() {
+
+  noTone(BUZZER_PIN);
+
+  ring.setBrightness(60);
+
+  for (int i = 0; i < LED_COUNT; i++) {
+    ring.setPixelColor(i, 0);
+  }
+
+  ring.show();
+  ring.show();
+}
+
+
+// ==========================
 // ⏹ 完全終了
 // ==========================
 
@@ -475,11 +496,7 @@ void enterStop() {
   wins = 0;
   interval = 80;
 
-  noTone(BUZZER_PIN);
-
-  ring.setBrightness(0);
-  ring.clear();
-  ring.show();
+  ledsOff();
 }
 
 
